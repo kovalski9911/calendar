@@ -4,6 +4,7 @@ from django.db.models.signals import post_save
 from datetime import timedelta
 from django.core.mail import send_mail
 from django.conf import settings
+from .tasks import send_testing_email
 
 
 class Reminder(models.Model):
@@ -73,12 +74,8 @@ def create_reminder_date(**kwargs):
             kwargs['instance'].save()
 
         if kwargs['instance'].author.email:
-            send_mail(
-                'heading testing msg',
-                'body testing msg',
-                settings.EMAIL_HOST_USER,
-                [kwargs['instance'].author.email,]
-            )
+            send_testing_email.delay(kwargs['instance'].author.email)
+            send_testing_periodic_email
 
 
 post_save.connect(create_reminder_date, sender=Event)

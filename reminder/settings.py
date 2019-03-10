@@ -127,8 +127,15 @@ STATIC_URL = '/static/'
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465
 EMAIL_HOST_USER = 'kovalski9911@yandex.ru'
-EMAIL_HOST_PASSWORD = 'host password'
+EMAIL_HOST_PASSWORD = 'password'
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# Celery application definition
+BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
