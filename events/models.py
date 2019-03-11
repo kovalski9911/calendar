@@ -2,8 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from datetime import timedelta
-from django.core.mail import send_mail
-from django.conf import settings
 from .tasks import send_testing_email
 
 
@@ -55,27 +53,29 @@ class Event(models.Model):
         return self.name
 
 
-def create_reminder_date(**kwargs):
-    if kwargs['created']:
-        if str(kwargs['instance'].reminder) == 'remind for 1 hour':
-            kwargs['instance'].reminder_date = kwargs['instance'].date - timedelta(hours=1)
-            kwargs['instance'].save()
-        elif str(kwargs['instance'].reminder) == 'remind for 2 hours':
-            kwargs['instance'].reminder_date = kwargs['instance'].date - timedelta(hours=2)
-            kwargs['instance'].save()
+def create_reminder_date(instance, created, **kwargs):
+    if created:
+        if str(instance.reminder) == 'remind for 1 hour':
+            instance.reminder_date = instance.date - timedelta(hours=1)
+            instance.save()
+        elif str(instance.reminder) == 'remind for 2 hours':
+            instance.reminder_date = instance.date - timedelta(hours=2)
+            instance.save()
         elif str(kwargs['instance'].reminder) == 'remind for 4 hours':
-            kwargs['instance'].reminder_date = kwargs['instance'].date - timedelta(hours=4)
-            kwargs['instance'].save()
-        elif str(kwargs['instance'].reminder) == 'remind for 1 day':
-            kwargs['instance'].reminder_date = kwargs['instance'].date - timedelta(days=1)
-            kwargs['instance'].save()
-        elif str(kwargs['instance'].reminder) == 'remind for a week':
-            kwargs['instance'].reminder_date = kwargs['instance'].date - timedelta(days=7)
-            kwargs['instance'].save()
+            instance.reminder_date = instance.date - timedelta(hours=4)
+            instance.save()
+        elif str(instance.reminder) == 'remind for 1 day':
+            instance.reminder_date = instance.date - timedelta(days=1)
+            instance.save()
+        elif str(instance.reminder) == 'remind for a week':
+            instance.reminder_date = instance.date - timedelta(days=7)
+            instance.save()
 
-        if kwargs['instance'].author.email:
-            send_testing_email.delay(kwargs['instance'].author.email)
-            send_testing_periodic_email
+        if instance.author.email:
+            # отправка письма с напоминанием
+            user_reminder_date = instance.reminder_date
+            user_email = instance.author.email
+            send_testing_email.apply_async(args=(user_email,), eta=user_reminder_date)
 
 
 post_save.connect(create_reminder_date, sender=Event)
