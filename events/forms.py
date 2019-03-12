@@ -1,12 +1,5 @@
 from django import forms
-from .models import Reminder, Event
-
-
-class ReminderForm(forms.ModelForm):
-
-    class Meta:
-        model = Reminder
-        fields = ['name']
+from .models import Event
 
 
 class EventForm(forms.ModelForm):

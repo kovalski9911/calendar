@@ -4,10 +4,10 @@ from django.conf import settings
 
 
 @app.task(name="send_email_task")
-def send_testing_email(user_email, *args, **kwargs):
+def send_email(user_email, *args, **kwargs):
     send_mail(
-        'Напоминание',
-        'Вы оставили в расписании задачу',
+        'Head mail',
+        'Body mail',
         settings.EMAIL_HOST_USER,
         [user_email]
     )

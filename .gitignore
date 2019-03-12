@@ -115,5 +115,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+# my
 .idea
 secret_settings.py

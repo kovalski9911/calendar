@@ -4,42 +4,9 @@ from django.views.generic import (ListView,
                                   UpdateView,
                                   DeleteView,
                                   )
-from .models import Reminder, Event
-from .forms import ReminderForm
-from django.urls import reverse, reverse_lazy
+from .models import Event
+from django.urls import reverse_lazy
 
-
-class ReminderListView(ListView):
-    model = Reminder
-
-
-class ReminderDetailView(DetailView):
-    model = Reminder
-
-
-class ReminderCreateView(CreateView):
-    form_class = ReminderForm
-    template_name = 'events/reminder_create.html'
-
-    def get_success_url(self):
-        return reverse('events:reminder-detail', kwargs={'pk': self.object.pk})
-
-
-class ReminderUpdateView(UpdateView):
-    form_class = ReminderForm
-    model = Reminder
-    template_name = 'events/reminder_create.html'
-
-    def get_success_url(self):
-        return reverse('event:reminder-detail', kwargs={'pk': self.object.pk})
-
-
-class ReminderDeleteView(DeleteView):
-    model = Reminder
-    success_url = reverse_lazy('event:reminder-list')
-
-
-#######################################
 
 class EventCreateView(CreateView):
     model = Event
