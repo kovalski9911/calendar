@@ -1,6 +1,10 @@
 from django import forms
 from .models import Event
 from django.utils import timezone
+from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import UserCreationForm
+
+User = get_user_model()
 
 
 class EventForm(forms.ModelForm):
@@ -20,3 +24,16 @@ class EventForm(forms.ModelForm):
         if data < now:
             raise forms.ValidationError("Enter valid date")
         return data
+
+
+class UserRegisterForm(UserCreationForm):
+    email = forms.EmailField()
+
+    class Meta:
+        model = User
+        fields = [
+            'username',
+            'email',
+            'password1',
+            'password2'
+        ]

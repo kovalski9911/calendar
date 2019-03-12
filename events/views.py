@@ -1,11 +1,11 @@
 from django.views.generic import (
     ListView,
     CreateView,
-    TemplateView,
+    FormView,
     )
 from .models import Event
 from django.urls import reverse_lazy
-from .forms import EventForm
+from .forms import EventForm, UserRegisterForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
@@ -25,3 +25,12 @@ class EventCreateView(LoginRequiredMixin, CreateView):
 class EventListView(LoginRequiredMixin, ListView):
     login_url = reverse_lazy('events:login')
     model = Event
+
+
+class UserRegisterView(FormView):
+    form_class = UserRegisterForm
+    success_url = reverse_lazy('events:login')
+
+    def form_valid(self, form):
+        form.save()
+        return super(UserRegisterView, self).form_valid(form)
