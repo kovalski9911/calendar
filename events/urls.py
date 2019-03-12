@@ -1,4 +1,4 @@
-from django.contrib import admin
+from django.contrib.auth import views as auth_views
 from django.urls import path
 from .views import (
     EventListView,
@@ -8,6 +8,8 @@ from .views import (
 app_name = 'events'
 
 urlpatterns = [
-    path('event-list/', EventListView.as_view(), name='event-list'),
-    path('event-create/', EventCreateView.as_view(), name='event-create'),
+    path('welcome/', auth_views.LoginView.as_view(template_name='events/login.html'), name='login'),
+
+    path('list/', EventListView.as_view(), name='event-list'),
+    path('create/', EventCreateView.as_view(), name='event-create'),
 ]

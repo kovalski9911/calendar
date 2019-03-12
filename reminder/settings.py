@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os
 
+from django.urls import reverse_lazy
+
 from . import secret_settings
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -40,7 +42,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # my
+    # third party
+    'crispy_forms',
+
+    # local
     'events',
 ]
 
@@ -117,6 +122,9 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+
+LOGIN_REDIRECT_URL = reverse_lazy('events:event-list')
 
 
 # Static files (CSS, JavaScript, Images)
