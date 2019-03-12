@@ -47,6 +47,9 @@ class Event(models.Model):
         blank=True,
         null=True
     )
+    timestamp = models.DateTimeField(
+        auto_now_add=True,
+    )
 
     def __str__(self):
         return self.name
@@ -71,10 +74,11 @@ def create_reminder_date(instance, created, **kwargs):
             instance.save()
 
         if instance.author.email:
-            # отправка письма с напоминанием
-            user_reminder_date = instance.reminder_date
-            user_email = instance.author.email
-            send_email.apply_async(args=(user_email,), eta=user_reminder_date)
+            if instance.reminder:
+                # отправка письма с напоминанием
+                user_reminder_date = instance.reminder_date
+                user_email = instance.author.email
+                send_email.apply_async(args=(user_email,), eta=user_reminder_date)
 
 
 post_save.connect(create_reminder_date, sender=Event)
