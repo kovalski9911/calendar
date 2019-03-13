@@ -1,7 +1,28 @@
 {% extends 'base/base.html' %}
 
 {% block content %}
-    {% for object in object_list %}
-        {{ object }}
-    {% endfor %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-8">
+                {% for object in object_list %}
+                    <div class="card">
+                        <div class="pl-1 pb-1">
+                            {{ object }}
+                        </div>
+                        <div class="border-top pt-3 pb-2"></div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="col-4">
+                <div class="side-bar">
+                    <p class="h2 pl-2">Hello {{ user.username }} :)
+                    </p>
+                    <a href="#" class="btn btn-success btn-block">Add Event</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
 {% endblock %}

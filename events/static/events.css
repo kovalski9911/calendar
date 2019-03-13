@@ -8,3 +8,17 @@
 body {
     background: lightgrey;
 }
+
+.card {
+    padding: 1%;
+    margin: 1%;
+    border-radius: 10px;
+}
+
+.side-bar {
+    background: white;
+    margin-top: 2%;
+    border-radius: 5px;
+    overflow: hidden;
+    padding: 5px;
+}
