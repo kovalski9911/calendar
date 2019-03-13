@@ -1,3 +1,10 @@
-.help-block {
-    color: red;
+.content-section {
+    /*border: solid 1px black;*/
+    background: white;
+    margin-top: 2%;
+    border-radius: 5px;
+}
+
+body {
+    background: lightgrey;
 }

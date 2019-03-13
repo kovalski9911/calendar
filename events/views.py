@@ -18,7 +18,6 @@ class EventCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user
-        print(form.instance.author)
         return super().form_valid(form)
 
 
@@ -33,4 +32,4 @@ class UserRegisterView(FormView):
 
     def form_valid(self, form):
         form.save()
-        return super(UserRegisterView, self).form_valid(form)
+        return super().form_valid(form)

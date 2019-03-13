@@ -78,7 +78,13 @@ def create_reminder_date(instance, created, **kwargs):
                 # отправка письма с напоминанием
                 user_reminder_date = instance.reminder_date
                 user_email = instance.author.email
-                send_email.apply_async(args=(user_email,), eta=user_reminder_date)
+                user_name = instance.author.username
+                event_name = instance.name
+                send_email.apply_async(args=(user_email,
+                                             user_name,
+                                             event_name
+                                             ),
+                                       eta=user_reminder_date)
 
 
 post_save.connect(create_reminder_date, sender=Event)
