@@ -6,22 +6,38 @@
         <div class="row">
             <div class="col-8">
                 {% for object in object_list %}
-                    <div class="card">
-                        <div class="pl-1 pb-1">
-                            {{ object }}
+                    {% if user.pk == object.author.pk %}
+                        <div class="card">
+                            <div class="pl-1 pb-1">
+                                <div class="box">
+                                    <div class="font-italic h3">{{ object }}</div>
+                                    <div class="del_btn"><a href="{% url 'events:event-delete' object.pk %}" class="btn btn-outline-danger btn-block">Х</a></div>
+                                </div>
+                            </div>
+                            <div class="border-top pt-3 pb-2">
+                                <span class="h3">{{ object.date }}</span>
+                                <span class="event_reminder h3">Reminder:
+                                    {% if object.reminder %}
+                                        on
+                                    {% else %}
+                                        off
+                                    {% endif %}
+                                </span>
+                            </div>
                         </div>
-                        <div class="border-top pt-3 pb-2"></div>
-                    </div>
+                    {% endif %}
                 {% endfor %}
             </div>
             <div class="col-4">
                 <div class="side-bar">
-                    <p class="h2 pl-2">Hello {{ user.username }} :)
-                    </p>
-                    <a href="#" class="btn btn-success btn-block">Add Event</a>
+                    <div class="box_side">
+                        <div class="h4 pl-2">Hello {{ user.username }} :)</div>
+                        <div class="logout_link pt-1"><a href="{% url 'events:logout' %}">Logout</a></div>
+                    </div>
+                    <a href="{% url 'events:event-create' %}" class="btn btn-outline-info btn-block">Add Event</a>
+
                 </div>
             </div>
-
         </div>
     </div>
 

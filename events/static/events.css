@@ -22,3 +22,27 @@ body {
     overflow: hidden;
     padding: 5px;
 }
+
+.event_date {
+    float: right;
+}
+
+.event_reminder {
+    float: right;
+}
+
+.box div {
+    display:inline-block;
+}
+
+.del_btn {
+    float: right;
+}
+
+.box_side div{
+    display:inline-block;
+}
+
+.logout_link {
+    float: right;
+}

@@ -28,6 +28,7 @@ class EventForm(forms.ModelForm):
 
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField()
+    username = forms.CharField(label="Username", max_length=15)
 
     class Meta:
         model = User
