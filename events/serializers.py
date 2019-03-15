@@ -6,16 +6,25 @@ from .models import Event
 User = get_user_model()
 
 
+class UserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = 'id', 'username', 'email'
+
+
 class EventListSerializer(serializers.ModelSerializer):
-    author = serializers.ReadOnlyField(source='author.username')
+    author = UserSerializer()
+    # author = serializers.ReadOnlyField(source='author.username')
 
     class Meta:
         model = Event
-        fields = '__all__'
+        fields = 'author', 'name', 'date', 'reminder_date'
 
 
 class EventCreateSerializer(serializers.ModelSerializer):
-    author = serializers.ReadOnlyField(source='author.username')
+    # author = serializers.ReadOnlyField(source='author.username')
+    author = UserSerializer()
 
     class Meta:
         model = Event

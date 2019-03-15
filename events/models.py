@@ -4,6 +4,7 @@ from django.db.models.signals import post_save
 from datetime import timedelta
 from .tasks import send_email
 
+from rest_framework.authtoken.models import Token
 
 User = get_user_model()
 
@@ -88,3 +89,11 @@ def create_reminder_date(instance, created, **kwargs):
 
 
 post_save.connect(create_reminder_date, sender=Event)
+
+
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+    if created:
+        Token.objects.create(user=instance)
+
+
+post_save.connect(create_auth_token, sender=User)
