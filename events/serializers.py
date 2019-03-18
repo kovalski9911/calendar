@@ -23,9 +23,7 @@ class EventListSerializer(serializers.ModelSerializer):
 
 
 class EventCreateSerializer(serializers.ModelSerializer):
-    # author = serializers.ReadOnlyField(source='author.username')
-    author = UserSerializer()
 
     class Meta:
         model = Event
-        fields = 'author', 'name', 'date', 'reminder'
+        fields = 'name', 'date', 'reminder'
