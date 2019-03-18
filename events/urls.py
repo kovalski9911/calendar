@@ -7,15 +7,21 @@ from .views import (
     EventCreateView,
     EventDeleteView,
 
-    UserRegisterView
+    UserRegisterView,
     )
-from .apiviews import EventList, EventDetail, EventCreate
+from .apiviews import (
+    EventList,
+    EventDetail,
+    EventCreate,
+    ApiUserRegisterView)
 
 
 app_name = 'events'
 
 urlpatterns = [
     # API
+    path('api/register', ApiUserRegisterView.as_view(), name='api-register'),
+
     path('api/list/', EventList.as_view(), name='api-event-list'),
     path('api/create/', EventCreate.as_view(), name='api-event-create'),
     path('api/detail/<int:pk>', EventDetail.as_view(), name='api-event-detail'),

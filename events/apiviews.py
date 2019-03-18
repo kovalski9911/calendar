@@ -3,13 +3,16 @@ from django.http import JsonResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import AllowAny
 
 from django.shortcuts import get_object_or_404
-from rest_framework import generics
 
+from django.contrib.auth import get_user_model
 from .models import Event
-from .serializers import EventListSerializer, EventCreateSerializer
+from .serializers import EventListSerializer, EventCreateSerializer, UserRegisterSerializer
 
+
+User = get_user_model()
 
 # def events_list(request):
 #     events = Event.objects.all()
@@ -41,6 +44,19 @@ class EventCreate(APIView):
             event_create.save(author=request.user)
             return Response(status=status.HTTP_201_CREATED)
         else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class ApiUserRegisterView(APIView):
+    permission_classes = (AllowAny,)
+
+    def post(self, request):
+        user_register = UserRegisterSerializer(data=request.data)
+        if user_register.is_valid():
+            user_register.save()
+            return Response(status=status.HTTP_201_CREATED)
+        else:
+            print(user_register.data)
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
