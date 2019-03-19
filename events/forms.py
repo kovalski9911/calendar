@@ -11,29 +11,29 @@ class EventForm(forms.ModelForm):
 
     class Meta:
         model = Event
-        fields = ['name', 'date', 'reminder']
+        fields = ['name', 'start_date', 'stop_date','reminder']
 
         widgets = {
             'author': forms.HiddenInput(),
-            'date': forms.DateTimeInput(attrs={'placeholder': 'yyyy-mm-dd hh:mm:ss'}),
+            'start_date': forms.DateTimeInput(attrs={'placeholder': 'yyyy-mm-dd hh:mm:ss'}),
         }
 
     def clean_date(self):
-        data = self.cleaned_data['date']
+        data = self.cleaned_data['start_date']
         now = timezone.now()
         if data < now:
             raise forms.ValidationError("Enter valid date")
         return data
 
 
-class UserRegisterForm(UserCreationForm):
-    email = forms.EmailField()
-    # username = forms.CharField(label="Username", max_length=15)
-
-    class Meta:
-        model = User
-        fields = [
-            'email',
-            'password1',
-            'password2'
-        ]
+# class UserRegisterForm(UserCreationForm):
+#     email = forms.EmailField()
+#     # username = forms.CharField(label="Username", max_length=15)
+#
+#     class Meta:
+#         model = User
+#         fields = [
+#             'email',
+#             'password1',
+#             'password2'
+#         ]

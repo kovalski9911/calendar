@@ -32,8 +32,14 @@ class Event(models.Model):
         max_length=100,
     )
 
-    date = models.DateTimeField(
-        verbose_name='Event date',
+    start_date = models.DateTimeField(
+        verbose_name='Start event date',
+    )
+
+    stop_date = models.DateTimeField(
+        verbose_name='Stop event date',
+        null=True,
+        blank=True
     )
 
     reminder = models.CharField(
@@ -88,12 +94,3 @@ def create_reminder_date(instance, created, **kwargs):
 
 
 post_save.connect(create_reminder_date, sender=Event)
-
-
-def create_auth_token(sender, instance=None, created=False, **kwargs):
-    if not created:
-        if instance.is_verified == True:
-            Token.objects.create(user=instance)
-
-
-post_save.connect(create_auth_token, sender=User)

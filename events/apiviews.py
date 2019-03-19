@@ -14,8 +14,7 @@ from .models import Event
 from .serializers import (
     EventListSerializer,
     EventCreateSerializer,
-    UserRegisterSerializer
-)
+    )
 
 
 User = get_user_model()
@@ -30,9 +29,9 @@ def event_list_per_day(request):
     date = datetime.strptime(date, "%Y-%m-%d")
     if date >= timezone.datetime.now():
         events = Event.objects.filter(
-            date__year=date.year,
-            date__month=date.month,
-            date__day=date.day,
+            start_date__year=date.year,
+            start_date__month=date.month,
+            start_date__day=date.day,
             author=request.user
         )
         data = EventListSerializer(events, many=True).data
@@ -51,8 +50,8 @@ def event_list_per_month(request):
     today = timezone.datetime.now()
     if date.year >= today.year and date.month >= today.month:
         events = Event.objects.filter(
-            date__year=date.year,
-            date__month=date.month,
+            start_date__year=date.year,
+            start_date__month=date.month,
             author=request.user
         )
         data = EventListSerializer(events, many=True).data
@@ -101,16 +100,16 @@ class EventDetail(APIView):
             return Response(status=status.HTTP_403_FORBIDDEN)
 
 
-class ApiUserRegisterView(APIView):
-    """
-    Registration users
-    """
-    permission_classes = (AllowAny,)
-
-    def post(self, request):
-        user_register = UserRegisterSerializer(data=request.data)
-        if user_register.is_valid():
-            user_register.save()
-            return Response(status=status.HTTP_201_CREATED)
-        else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+# class ApiUserRegisterView(APIView):
+#     """
+#     Registration users
+#     """
+#     permission_classes = (AllowAny,)
+#
+#     def post(self, request):
+#         user_register = UserRegisterSerializer(data=request.data)
+#         if user_register.is_valid():
+#             user_register.save()
+#             return Response(status=status.HTTP_201_CREATED)
+#         else:
+#             return Response(status=status.HTTP_400_BAD_REQUEST)

@@ -6,6 +6,8 @@ from django.core.mail import send_mail
 from django.urls import reverse
 from django.conf import settings
 
+from rest_framework.authtoken.models import Token
+
 
 class UserAccountManager(BaseUserManager):
     use_in_migrations = True
@@ -29,6 +31,7 @@ class UserAccountManager(BaseUserManager):
     def create_superuser(self, email, password, **extra_fields):
         extra_fields['is_staff'] = True
         extra_fields['is_superuser'] = True
+        extra_fields['is_verified'] = True
 
         return self._create_user(email, password, **extra_fields)
 
@@ -63,7 +66,7 @@ def user_post_save(sender, instance, signal, *args, **kwargs):
     if not instance.is_verified:
         # Send verification email
         send_mail(
-            'Verify your QuickPublisher account',
+            'Verify your account',
             'Follow this link to verify your account: '
             'http://localhost:8000%s' % reverse('verify', kwargs={
                 'uuid': str(instance.verification_uuid)}),
@@ -74,3 +77,11 @@ def user_post_save(sender, instance, signal, *args, **kwargs):
 
 
 signals.post_save.connect(user_post_save, sender=User)
+
+
+def create_auth_token(instance=None, created=False, **kwargs):
+    if created:
+        Token.objects.create(user=instance)
+
+
+signals.post_save.connect(create_auth_token, sender=User)

@@ -20,7 +20,8 @@ from users.views import verify
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('events/', include('events.urls')),
 
+    path('events/', include('events.urls')),
+    path('users/', include('users.urls')),
     path('verify/<uuid>/', verify, name='verify'),
 ]
