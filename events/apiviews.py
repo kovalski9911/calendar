@@ -2,8 +2,12 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import AllowAny
+from rest_framework.decorators import api_view
 
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
+
+from datetime import datetime
 
 from django.contrib.auth import get_user_model
 from .models import Event
@@ -17,11 +21,51 @@ from .serializers import (
 User = get_user_model()
 
 
+@api_view(['GET'])
+def event_list_per_day(request):
+    """
+    List of events for a per day
+    """
+    date = request.data['date']
+    date = datetime.strptime(date, "%Y-%m-%d")
+    if date >= timezone.datetime.now():
+        events = Event.objects.filter(
+            date__year=date.year,
+            date__month=date.month,
+            date__day=date.day,
+            author=request.user
+        )
+        data = EventListSerializer(events, many=True).data
+        return Response(data)
+    else:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+def event_list_per_month(request):
+    """
+    List of events for a month
+    """
+    date = request.data['date']
+    date = datetime.strptime(date, "%Y-%m")
+    today = timezone.datetime.now()
+    if date.year >= today.year and date.month >= today.month:
+        events = Event.objects.filter(
+            date__year=date.year,
+            date__month=date.month,
+            author=request.user
+        )
+        data = EventListSerializer(events, many=True).data
+        return Response(data)
+    else:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
 class EventList(APIView):
     """
     List of events or create a new event
     """
-    def get(self, request):
+    def get(self, request, ):
         events = Event.objects.filter(author=request.user)
         data = EventListSerializer(events, many=True).data
         return Response(data)

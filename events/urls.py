@@ -8,11 +8,15 @@ from .views import (
     EventDeleteView,
 
     UserRegisterView,
-    )
+)
 from .apiviews import (
     EventList,
     EventDetail,
-    ApiUserRegisterView)
+    ApiUserRegisterView,
+
+    event_list_per_day,
+    event_list_per_month
+)
 
 
 app_name = 'events'
@@ -20,6 +24,9 @@ app_name = 'events'
 urlpatterns = [
     # API
     path('api/user/register', ApiUserRegisterView.as_view(), name='api-user-register'),
+
+    path('api/list-per-day/', event_list_per_day, name='api-event-list-per-day'),
+    path('api/list-per-month/', event_list_per_month, name='api-event-list-per-month'),
 
     path('api/list/', EventList.as_view(), name='api-event-list'),
     path('api/create/', EventList.as_view(), name='api-event-create'),
