@@ -49,6 +49,7 @@ INSTALLED_APPS = [
 
     # local
     'events',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -137,6 +138,7 @@ USE_TZ = True
 
 LOGIN_REDIRECT_URL = reverse_lazy('events:event-list')
 
+AUTH_USER_MODEL = 'users.User'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/

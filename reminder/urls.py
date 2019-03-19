@@ -16,7 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from users.views import verify
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('events/', include('events.urls'))
+    path('events/', include('events.urls')),
+
+    path('verify/<uuid>/', verify, name='verify'),
 ]

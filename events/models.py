@@ -91,8 +91,9 @@ post_save.connect(create_reminder_date, sender=Event)
 
 
 def create_auth_token(sender, instance=None, created=False, **kwargs):
-    if created:
-        Token.objects.create(user=instance)
+    if not created:
+        if instance.is_verified == True:
+            Token.objects.create(user=instance)
 
 
 post_save.connect(create_auth_token, sender=User)
