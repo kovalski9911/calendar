@@ -3,7 +3,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import AllowAny
 
-from .serializers import UserRegisterSerializer
+from rest_framework.authtoken.models import Token
+
+from .serializers import UserRegisterSerializer, TokenSerializer
 from django.contrib.auth import get_user_model
 
 
@@ -20,6 +22,11 @@ class ApiUserRegisterView(APIView):
         user_register = UserRegisterSerializer(data=request.data)
         if user_register.is_valid():
             user_register.save()
-            return Response(status=status.HTTP_201_CREATED)
+            user_id = user_register['id'].value
+            int(user_id)
+            token = Token.objects.get(user_id=user_id)
+            ts = TokenSerializer(token).data
+            print(ts)
+            return Response(ts)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)

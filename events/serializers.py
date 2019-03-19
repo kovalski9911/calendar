@@ -60,7 +60,7 @@ class EventCreateSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         now = timezone.now()
-        if data['start_date'] <= now:
+        if data['start_date'] <= now or data['start_date'] > data['stop_date']:
             raise serializers.ValidationError('Enter valid date')
         return data
 

@@ -23,5 +23,6 @@ urlpatterns = [
 
     path('events/', include('events.urls')),
     path('users/', include('users.urls')),
+
     path('verify/<uuid>/', verify, name='verify'),
 ]
