@@ -12,7 +12,6 @@ from .views import (
 from .apiviews import (
     EventList,
     EventDetail,
-    EventCreate,
     ApiUserRegisterView)
 
 
@@ -20,11 +19,12 @@ app_name = 'events'
 
 urlpatterns = [
     # API
-    path('api/register', ApiUserRegisterView.as_view(), name='api-register'),
+    path('api/user/register', ApiUserRegisterView.as_view(), name='api-user-register'),
 
     path('api/list/', EventList.as_view(), name='api-event-list'),
-    path('api/create/', EventCreate.as_view(), name='api-event-create'),
+    path('api/create/', EventList.as_view(), name='api-event-create'),
     path('api/detail/<int:pk>', EventDetail.as_view(), name='api-event-detail'),
+    path('api/delete/<int:pk>', EventDetail.as_view(), name='api-event-delete'),
 
     # base
     path('login/', auth_views.LoginView.as_view(template_name='events/login.html'), name='login'),

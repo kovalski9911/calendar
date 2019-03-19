@@ -76,7 +76,6 @@ def create_reminder_date(instance, created, **kwargs):
 
         if instance.author.email:
             if instance.reminder:
-                # отправка письма с напоминанием
                 user_reminder_date = instance.reminder_date
                 user_email = instance.author.email
                 user_name = instance.author.username
