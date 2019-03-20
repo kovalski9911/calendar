@@ -1,7 +1,6 @@
 from django.views.generic import (
     ListView,
     CreateView,
-    FormView,
     DeleteView,
     )
 from .models import Event
@@ -12,7 +11,7 @@ from django.utils import timezone
 
 
 class EventCreateView(LoginRequiredMixin, CreateView):
-    login_url = reverse_lazy('events:login')
+    login_url = reverse_lazy('users:login')
     model = Event
     template_name = 'events/event_create.html'
     form_class = EventForm
@@ -24,7 +23,7 @@ class EventCreateView(LoginRequiredMixin, CreateView):
 
 
 class EventListView(LoginRequiredMixin, ListView):
-    login_url = reverse_lazy('events:login')
+    login_url = reverse_lazy('users:login')
     model = Event
 
     def get_queryset(self):
@@ -43,12 +42,3 @@ class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
             return True
         else:
             return False
-
-
-# class UserRegisterView(FormView):
-#     form_class = UserRegisterForm
-#     success_url = reverse_lazy('events:login')
-#
-#     def form_valid(self, form):
-#         form.save()
-#         return super().form_valid(form)

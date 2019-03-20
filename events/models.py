@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.db.models.signals import post_save
-from datetime import timedelta
+from datetime import timedelta, datetime
 from .tasks import send_email
 
 from rest_framework.authtoken.models import Token
@@ -64,33 +64,48 @@ class Event(models.Model):
 
 def create_reminder_date(instance, created, **kwargs):
     if created:
-        if str(instance.reminder) == '1h':
-            instance.reminder_date = instance.date - timedelta(hours=1)
-            instance.save()
-        elif str(instance.reminder) == '2h':
-            instance.reminder_date = instance.date - timedelta(hours=2)
-            instance.save()
-        elif str(instance.reminder) == '4h':
-            instance.reminder_date = instance.date - timedelta(hours=4)
-            instance.save()
-        elif str(instance.reminder) == '1d':
-            instance.reminder_date = instance.date - timedelta(days=1)
-            instance.save()
-        elif str(instance.reminder) == '1w':
-            instance.reminder_date = instance.date - timedelta(days=7)
+
+        # set default stop_date
+        if not instance.stop_date:
+            start = instance.start_date
+            instance.stop_date = datetime(
+                start.year,
+                start.month,
+                start.day,
+                hour=23,
+                minute=59)
             instance.save()
 
-        if instance.author.email:
-            if instance.reminder:
-                user_reminder_date = instance.reminder_date
-                user_email = instance.author.email
-                user_name = instance.author.username
-                event_name = instance.name
-                send_email.apply_async(args=(user_email,
-                                             user_name,
-                                             event_name
-                                             ),
-                                       eta=user_reminder_date)
+        # set reminder date
+        if instance.reminder_date:
+            if str(instance.reminder) == '1h':
+                instance.reminder_date = instance.date - timedelta(hours=1)
+                instance.save()
+            elif str(instance.reminder) == '2h':
+                instance.reminder_date = instance.date - timedelta(hours=2)
+                instance.save()
+            elif str(instance.reminder) == '4h':
+                instance.reminder_date = instance.date - timedelta(hours=4)
+                instance.save()
+            elif str(instance.reminder) == '1d':
+                instance.reminder_date = instance.date - timedelta(days=1)
+                instance.save()
+            elif str(instance.reminder) == '1w':
+                instance.reminder_date = instance.date - timedelta(days=7)
+                instance.save()
+
+            # send mail to remind
+            if instance.author.email:
+                if instance.reminder:
+                    user_reminder_date = instance.reminder_date
+                    user_email = instance.author.email
+                    user_name = instance.author.username
+                    event_name = instance.name
+                    send_email.apply_async(args=(user_email,
+                                                 user_name,
+                                                 event_name
+                                                 ),
+                                           eta=user_reminder_date)
 
 
 post_save.connect(create_reminder_date, sender=Event)

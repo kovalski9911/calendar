@@ -9,44 +9,12 @@ from users.serializers import UserSerializer
 User = get_user_model()
 
 
-# class UserRegisterSerializer(serializers.ModelSerializer):
-#     """
-#     Serialize user registration
-#     """
-#
-#     password = serializers.CharField(write_only=True)
-#
-#     def create(self, validated_data):
-#         user = User.objects.create(
-#             # username=validated_data['username'],
-#             email=validated_data['email']
-#         )
-#         user.set_password(validated_data['password'])
-#         user.save()
-#         return user
-#
-#     class Meta:
-#         model = User
-#         fields = ('id', 'email', 'password',)
-#
-#
-# class UserSerializer(serializers.ModelSerializer):
-#     """
-#     Serialize user model
-#     """
-#
-#     class Meta:
-#         model = User
-#         fields = ('id', 'email')
-
-
 class EventListSerializer(serializers.ModelSerializer):
     """
     Serialize list of event
     """
 
     author = UserSerializer()
-    # author = serializers.ReadOnlyField(source='author.username')
 
     class Meta:
         model = Event
@@ -60,8 +28,11 @@ class EventCreateSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         now = timezone.now()
-        if data['start_date'] <= now or data['start_date'] > data['stop_date']:
-            raise serializers.ValidationError('Enter valid date')
+        if data['start_date'] <= now:
+            raise serializers.ValidationError('Enter valid start_date')
+        if data['stop_date'] != '':
+            if data['start_date'] > data['stop_date']:
+                raise serializers.ValidationError('Enter valid start_date and or stop_date')
         return data
 
     class Meta:

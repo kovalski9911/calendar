@@ -1,7 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import AllowAny
 from rest_framework.decorators import api_view
 
 from django.shortcuts import get_object_or_404
@@ -99,18 +98,3 @@ class EventDetail(APIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
         else:
             return Response(status=status.HTTP_403_FORBIDDEN)
-
-
-# class ApiUserRegisterView(APIView):
-#     """
-#     Registration users
-#     """
-#     permission_classes = (AllowAny,)
-#
-#     def post(self, request):
-#         user_register = UserRegisterSerializer(data=request.data)
-#         if user_register.is_valid():
-#             user_register.save()
-#             return Response(status=status.HTTP_201_CREATED)
-#         else:
-#             return Response(status=status.HTTP_400_BAD_REQUEST)
