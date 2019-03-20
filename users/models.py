@@ -12,6 +12,11 @@ from django.conf import settings
 
 from rest_framework.authtoken.models import Token
 
+import datetime
+import os.path
+import requests
+from icalendar import Calendar
+
 
 class UserAccountManager(BaseUserManager):
     """Custom manager"""
@@ -62,6 +67,12 @@ class User(AbstractBaseUser, PermissionsMixin):
         null=True,
         max_length=400
     )
+    country = models.CharField(
+        'country',
+        blank=True,
+        null=True,
+        max_length=100
+    )
     is_staff = models.BooleanField(
         'staff status',
         default=False
@@ -89,10 +100,14 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.email
 
 
-def user_post_save(sender, instance, signal, *args, **kwargs):
-    """Send mail after register user"""
+def user_post_save(sender, created, instance, signal, *args, **kwargs):
+    """
+    Send mail after register user
+    Add events for users country
+    """
+
+    # Send verification email
     if not instance.is_verified:
-        # Send verification email
         send_mail(
             'Verify your account',
             'Follow this link to verify your account: '
@@ -102,6 +117,43 @@ def user_post_save(sender, instance, signal, *args, **kwargs):
             [instance.email],
             fail_silently=False,
         )
+
+    # add events for users country
+    if created:
+        if instance.country:
+
+            # save ics file to local disk
+            url = 'https://www.officeholidays.com/ics/ics_country.php?tbl_country={country}'.format(
+                country=instance.country
+            )
+
+            file_name = '{country}.ics'.format(country=instance.country)
+            file_path = 'events/event/{}'.format(file_name)
+
+            if not os.path.isfile(file_path):
+                r = requests.get(url)
+                file = open('events/event/{}'.format(file_name), 'wb')
+                for some in r:
+                    file.write(some)
+                file.close()
+
+            # parse ics file and create a new events
+            file = open('events/event/{}'.format(file_name), 'rb')
+            cal = Calendar.from_ical(file.read())
+            for component in cal.walk():
+                if component.name == "VEVENT":
+                    if component.get('dtstart').dt < datetime.date.today():
+                        continue
+                    else:
+                        from events.models import Event
+                        event = Event.objects.create(
+                            author=instance,
+                            name=component.get('summary'),
+                            start_date=component.get('dtstart').dt,
+                            stop_date=component.get('dtend').dt
+                        )
+                        event.save()
+            file.close()
 
 
 signals.post_save.connect(user_post_save, sender=User)
