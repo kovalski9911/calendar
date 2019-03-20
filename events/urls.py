@@ -11,7 +11,7 @@ from .apiviews import (
     EventDetail,
 
     event_list_per_day,
-    event_list_per_month
+    event_list_per_month,
 )
 
 

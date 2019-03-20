@@ -2,12 +2,12 @@ from django import forms
 from .models import Event
 from django.utils import timezone
 from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import UserCreationForm
 
 User = get_user_model()
 
 
 class EventForm(forms.ModelForm):
+    """Form for create event"""
 
     class Meta:
         model = Event
@@ -19,21 +19,9 @@ class EventForm(forms.ModelForm):
         }
 
     def clean_date(self):
+        # доделать проверку на start stop date!!!!
         data = self.cleaned_data['start_date']
         now = timezone.now()
         if data < now:
             raise forms.ValidationError("Enter valid date")
         return data
-
-
-# class UserRegisterForm(UserCreationForm):
-#     email = forms.EmailField()
-#     # username = forms.CharField(label="Username", max_length=15)
-#
-#     class Meta:
-#         model = User
-#         fields = [
-#             'email',
-#             'password1',
-#             'password2'
-#         ]

@@ -1,5 +1,9 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from django.contrib.auth.models import (
+    AbstractBaseUser,
+    PermissionsMixin,
+    BaseUserManager,
+)
 import uuid
 from django.db.models import signals
 from django.core.mail import send_mail
@@ -10,6 +14,8 @@ from rest_framework.authtoken.models import Token
 
 
 class UserAccountManager(BaseUserManager):
+    """Custom manager"""
+
     use_in_migrations = True
 
     def _create_user(self, email, password, **extra_fields):
@@ -37,20 +43,41 @@ class UserAccountManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+    """Custom user model"""
+
     REQUIRED_FIELDS = []
     USERNAME_FIELD = 'email'
 
     objects = UserAccountManager()
 
-    email = models.EmailField('email', unique=True, blank=False, null=False)
-    full_name = models.CharField('full name', blank=True, null=True,
-                                 max_length=400)
-    is_staff = models.BooleanField('staff status', default=False)
-    is_active = models.BooleanField('active', default=True)
-    is_verified = models.BooleanField('verified',
-                                      default=False)  # Add the `is_verified` flag
-    verification_uuid = models.UUIDField('Unique Verification UUID',
-                                         default=uuid.uuid4)
+    email = models.EmailField(
+        'email',
+        unique=True,
+        blank=False,
+        null=False
+    )
+    full_name = models.CharField(
+        'full name',
+        blank=True,
+        null=True,
+        max_length=400
+    )
+    is_staff = models.BooleanField(
+        'staff status',
+        default=False
+    )
+    is_active = models.BooleanField(
+        'active',
+        default=True
+    )
+    is_verified = models.BooleanField(
+        'verified',
+        default=False
+    )
+    verification_uuid = models.UUIDField(
+        'Unique Verification UUID',
+        default=uuid.uuid4
+    )
 
     def get_short_name(self):
         return self.email
@@ -63,6 +90,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 def user_post_save(sender, instance, signal, *args, **kwargs):
+    """Send mail after register user"""
     if not instance.is_verified:
         # Send verification email
         send_mail(
@@ -80,6 +108,7 @@ signals.post_save.connect(user_post_save, sender=User)
 
 
 def create_auth_token(instance=None, created=False, **kwargs):
+    """Creating token after register users"""
     if created:
         Token.objects.create(user=instance)
 

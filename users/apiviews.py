@@ -3,9 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import AllowAny
 
-from rest_framework.authtoken.models import Token
-
-from .serializers import UserRegisterSerializer, TokenSerializer
+from .serializers import UserRegisterSerializer
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate
 
@@ -14,9 +12,8 @@ User = get_user_model()
 
 
 class ApiUserRegisterView(APIView):
-    """
-    Registration users
-    """
+    """Registration users"""
+
     permission_classes = (AllowAny,)
 
     def post(self, request):
@@ -29,6 +26,8 @@ class ApiUserRegisterView(APIView):
 
 
 class ApiUserLoginView(APIView):
+    """Login users"""
+
     permission_classes = (AllowAny,)
 
     def post(self, request,):

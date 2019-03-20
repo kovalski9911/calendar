@@ -10,6 +10,7 @@ User = get_user_model()
 
 
 class Event(models.Model):
+    """Model of event"""
 
     REMINDER_CHOICES = (
         ('1h', 'remind for 1 hour'),

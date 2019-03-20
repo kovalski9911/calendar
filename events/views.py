@@ -9,8 +9,12 @@ from .forms import EventForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.utils import timezone
 
+# Добавить проверку на подтверждение пользователя после регистрации для CBV
+
 
 class EventCreateView(LoginRequiredMixin, CreateView):
+    """Class for creating new event"""
+
     login_url = reverse_lazy('users:login')
     model = Event
     template_name = 'events/event_create.html'
@@ -23,6 +27,8 @@ class EventCreateView(LoginRequiredMixin, CreateView):
 
 
 class EventListView(LoginRequiredMixin, ListView):
+    """Class for a list of event"""
+
     login_url = reverse_lazy('users:login')
     model = Event
 
@@ -33,6 +39,8 @@ class EventListView(LoginRequiredMixin, ListView):
 
 
 class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    """Class for a deleting event"""
+
     model = Event
     success_url = reverse_lazy('events:event-list')
 

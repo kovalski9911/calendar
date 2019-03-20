@@ -21,9 +21,7 @@ User = get_user_model()
 
 @api_view(['GET'])
 def event_list_per_day(request):
-    """
-    List of events for a per day
-    """
+    """List of events for a per day"""
     date = request.data['date']
     date = datetime.strptime(date, "%Y-%m-%d")
     if date >= timezone.datetime.now():
@@ -41,9 +39,7 @@ def event_list_per_day(request):
 
 @api_view(['GET'])
 def event_list_per_month(request):
-    """
-    List of events for a month
-    """
+    """List of events for a month"""
     date = request.data['date']
     date = datetime.strptime(date, "%Y-%m")
     today = timezone.datetime.now()
@@ -60,9 +56,8 @@ def event_list_per_month(request):
 
 
 class EventList(APIView):
-    """
-    List of events or create a new event
-    """
+    """List of events or create a new event"""
+
     def get(self, request, ):
         events = Event.objects.filter(author=request.user)
         data = EventListSerializer(events, many=True).data
@@ -79,9 +74,7 @@ class EventList(APIView):
 
 
 class EventDetail(APIView):
-    """
-    Retrieve or delete event instance
-    """
+    """Retrieve or delete event instance"""
 
     def get(self, request, pk):
         event = get_object_or_404(Event, pk=pk)

@@ -10,10 +10,7 @@ User = get_user_model()
 
 
 class EventListSerializer(serializers.ModelSerializer):
-    """
-    Serialize list of event
-    """
-
+    """Serialize list of event"""
     author = UserSerializer()
 
     class Meta:
@@ -22,10 +19,7 @@ class EventListSerializer(serializers.ModelSerializer):
 
 
 class EventCreateSerializer(serializers.ModelSerializer):
-    """
-    Serialize create event
-    """
-
+    """Serialize create event"""
     def validate(self, data):
         now = timezone.now()
         if data['start_date'] <= now:

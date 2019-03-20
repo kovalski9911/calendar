@@ -24,5 +24,6 @@ urlpatterns = [
     path('events/', include('events.urls')),
     path('users/', include('users.urls')),
 
+    # добавить API
     path('verify/<uuid>/', verify, name='verify'),
 ]

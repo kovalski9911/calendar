@@ -7,11 +7,12 @@ from .forms import UserRegisterForm
 
 
 def verify(request, uuid):
-    """
-    verification users
-    """
+    """verification users"""
     try:
-        user = User.objects.get(verification_uuid=uuid, is_verified=False)
+        user = User.objects.get(
+            verification_uuid=uuid,
+            is_verified=False
+        )
     except User.DoesNotExist:
         raise Http404("User does not exist or is already verified")
 
@@ -22,6 +23,8 @@ def verify(request, uuid):
 
 
 class UserRegisterView(FormView):
+    """User registration view"""
+
     form_class = UserRegisterForm
     success_url = reverse_lazy('users:login')
 
