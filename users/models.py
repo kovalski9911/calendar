@@ -67,6 +67,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         null=True,
         max_length=400
     )
+    # Поместить список стран отдельно в бд
     country = models.CharField(
         'country',
         blank=True,
@@ -129,6 +130,7 @@ def user_post_save(sender, created, instance, signal, *args, **kwargs):
             file_path = 'events/event/{}'.format(file_name)
 
             if not os.path.isfile(file_path):
+                # в зависимости от ситуации необходимо перехватить возможрные исключения
                 r = requests.get(url)
                 file = open('events/event/{}'.format(file_name), 'wb')
                 for some in r:
@@ -140,6 +142,7 @@ def user_post_save(sender, created, instance, signal, *args, **kwargs):
             cal = Calendar.from_ical(file.read())
             for component in cal.walk():
                 if component.name == "VEVENT":
+                    # only actual events
                     if component.get('dtstart').dt < datetime.date.today():
                         continue
                     else:
@@ -158,8 +161,8 @@ signals.post_save.connect(user_post_save, sender=User)
 
 
 def create_auth_token(instance=None, created=False, **kwargs):
-    """Creating token after verification users"""
-    if instance.is_verified:
+    """Create token after create users"""
+    if created:
         Token.objects.create(user=instance)
 
 
