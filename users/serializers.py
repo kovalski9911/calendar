@@ -10,11 +10,12 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     """Serialize user registration"""
 
     password = serializers.CharField(write_only=True)
+    country = serializers.CharField(required=False, allow_null=True)
 
     def create(self, validated_data):
         user = User.objects.create(
-            # username=validated_data['username'],
-            email=validated_data['email']
+            email=validated_data['email'],
+            country=validated_data['country']
         )
         user.set_password(validated_data['password'])
         user.save()
@@ -22,7 +23,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'email', 'password',)
+        fields = ('id', 'email', 'password', 'country')
 
 
 class UserSerializer(serializers.ModelSerializer):

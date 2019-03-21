@@ -11,7 +11,7 @@ class EventForm(forms.ModelForm):
 
     class Meta:
         model = Event
-        fields = ['name', 'start_date', 'stop_date','reminder']
+        fields = ['name', 'start_date', 'stop_date', 'reminder']
 
         widgets = {
             'author': forms.HiddenInput(),
@@ -23,5 +23,5 @@ class EventForm(forms.ModelForm):
         data = self.cleaned_data['start_date']
         now = timezone.now()
         if data < now:
-            raise forms.ValidationError("Enter valid date")
+            raise forms.ValidationError('Enter valid date')
         return data

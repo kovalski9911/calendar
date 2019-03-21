@@ -29,16 +29,16 @@ class Event(models.Model):
     )
 
     name = models.CharField(
-        verbose_name='Event name',
+        'Event name',
         max_length=100,
     )
 
     start_date = models.DateTimeField(
-        verbose_name='Start event date',
+        'Start event date',
     )
 
     stop_date = models.DateTimeField(
-        verbose_name='Stop event date',
+        'Stop event date',
         null=True,
         blank=True
     )
@@ -51,7 +51,7 @@ class Event(models.Model):
     )
 
     reminder_date = models.DateTimeField(
-        verbose_name='Reminder date',
+        'Reminder date',
         blank=True,
         null=True
     )
@@ -64,8 +64,11 @@ class Event(models.Model):
 
 
 def create_reminder_date(instance, created, **kwargs):
+    """
+    Create reminerer date after creating event
+    Send mail with reminder of event
+    """
     if created:
-
         # set default stop_date
         if not instance.stop_date:
             start = instance.start_date

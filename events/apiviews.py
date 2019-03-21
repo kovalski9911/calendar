@@ -23,7 +23,7 @@ User = get_user_model()
 def event_list_per_day(request):
     """List of events for a per day"""
     date = request.data['date']
-    date = datetime.strptime(date, "%Y-%m-%d")
+    date = datetime.strptime(date, '%Y-%m-%d')
     if date >= timezone.datetime.now():
         events = Event.objects.filter(
             start_date__year=date.year,
@@ -41,7 +41,7 @@ def event_list_per_day(request):
 def event_list_per_month(request):
     """List of events for a month"""
     date = request.data['date']
-    date = datetime.strptime(date, "%Y-%m")
+    date = datetime.strptime(date, '%Y-%m')
     today = timezone.datetime.now()
     if date.year >= today.year and date.month >= today.month:
         events = Event.objects.filter(

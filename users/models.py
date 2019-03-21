@@ -105,7 +105,6 @@ def user_post_save(sender, created, instance, signal, *args, **kwargs):
     Send mail after register user
     Add events for users country
     """
-
     # Send verification email
     if not instance.is_verified:
         send_mail(
@@ -119,9 +118,8 @@ def user_post_save(sender, created, instance, signal, *args, **kwargs):
         )
 
     # add events for users country
-    if created:
+    if instance.is_verified:
         if instance.country:
-
             # save ics file to local disk
             url = 'https://www.officeholidays.com/ics/ics_country.php?tbl_country={country}'.format(
                 country=instance.country
@@ -160,8 +158,8 @@ signals.post_save.connect(user_post_save, sender=User)
 
 
 def create_auth_token(instance=None, created=False, **kwargs):
-    """Creating token after register users"""
-    if created:
+    """Creating token after verification users"""
+    if instance.is_verified:
         Token.objects.create(user=instance)
 
 

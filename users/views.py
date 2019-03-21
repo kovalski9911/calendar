@@ -14,7 +14,7 @@ def verify(request, uuid):
             is_verified=False
         )
     except User.DoesNotExist:
-        raise Http404("User does not exist or is already verified")
+        raise Http404('User does not exist or is already verified')
 
     user.is_verified = True
     user.save()
