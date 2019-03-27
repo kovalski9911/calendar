@@ -145,6 +145,7 @@ AUTH_USER_MODEL = 'users.User'
 
 STATIC_URL = '/static/'
 
+DEFAULT_DOMAIN = 'http://127.0.0.1:8000'
 
 # send mail
 EMAIL_HOST = 'smtp.yandex.ru'

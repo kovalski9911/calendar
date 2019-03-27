@@ -19,7 +19,7 @@ from .serializers import (
 User = get_user_model()
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 def event_list_per_day(request):
     """List of events for a per day"""
     date = request.data['date']
@@ -37,7 +37,7 @@ def event_list_per_day(request):
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 def event_list_per_month(request):
     """List of events for a month"""
     date = request.data['date']
