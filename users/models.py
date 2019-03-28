@@ -6,18 +6,11 @@ from django.contrib.auth.models import (
 )
 import uuid
 from django.db.models import signals
-from django.core.mail import send_mail
-from django.urls import reverse
-from django.conf import settings
-from django.utils import timezone
 
+from .tasks import send_mail_to_verificate, add_country_event
 from django.contrib.sites.models import Site
 
 from rest_framework.authtoken.models import Token
-
-import os.path
-import requests
-from icalendar import Calendar
 
 
 class UserAccountManager(BaseUserManager):
@@ -103,62 +96,16 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __unicode__(self):
         return self.email
 
-    def save(self):
-        super(User, self).save()
-
-        s = Site.objects.get_current().domain
-        print(s)
+    def save(self, *args, **kwargs):
+        super(User, self).save(*args, **kwargs)
 
         # Send mail after register user
         if not self.is_verified:
-            s = Site.objects.get_current().domain
-            send_mail(
-                'Verify your account',
-                'Follow this link to verify your account: {0}{1}'.format(
-                    s,
-                    reverse('verify', kwargs={
-                    'uuid': str(self.verification_uuid)})
-                ),
-                settings.EMAIL_HOST_USER,
-                [self.email],
-                fail_silently=False,
-            )
+            send_mail_to_verificate(self,)
 
         # Add events for users country
         if self.is_verified and self.country:
-            # save ics file to local disk
-            url = 'https://www.officeholidays.com/ics/ics_country.php?tbl_country={country}'.format(
-                country=self.country
-            )
-            FILE_NAME = '{country}.ics'.format(country=self.country)
-            FILE_PATH = str(settings.EVENT_DIR) + '{}'.format(FILE_NAME)
-
-            if not os.path.isfile(FILE_PATH):
-                # в зависимости от ситуации необходимо перехватить возможные исключения
-                r = requests.get(url)
-                file = open(FILE_PATH, 'wb')
-                for some in r:
-                    file.write(some)
-                file.close()
-
-            # parse ics file and create a new events
-            file = open(FILE_PATH, 'rb')
-            cal = Calendar.from_ical(file.read())
-            for component in cal.walk():
-                if component.name == "VEVENT":
-                    # only actual events
-                    if component.get('dtstart').dt <= timezone.localdate():
-                        continue
-                    else:
-                        from events.models import Event
-                        event = Event.objects.create(
-                            author=self,
-                            name=component.get('summary'),
-                            start_date=component.get('dtstart').dt,
-                            stop_date=component.get('dtend').dt
-                        )
-                        event.save()
-
+            add_country_event(self, )
 
 
 # def user_post_save(sender, created, instance, signal, *args, **kwargs):
