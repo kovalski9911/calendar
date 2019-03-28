@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
 
     # third party
     'crispy_forms',
@@ -145,6 +146,12 @@ AUTH_USER_MODEL = 'users.User'
 
 STATIC_URL = '/static/'
 
+SITE_ID = 1
+
+# dir for save events files for country
+EVENT_DIR = (os.path.join(BASE_DIR, "events", "events/",))
+
+# default domain
 DEFAULT_DOMAIN = 'http://127.0.0.1:8000'
 
 # send mail

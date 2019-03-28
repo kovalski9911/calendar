@@ -23,36 +23,46 @@ User = get_user_model()
 def event_list_per_day(request):
     """List of events for a per day"""
     date = request.data['date']
-    date = datetime.strptime(date, '%Y-%m-%d')
-    if date >= timezone.datetime.now():
-        events = Event.objects.filter(
-            start_date__year=date.year,
-            start_date__month=date.month,
-            start_date__day=date.day,
-            author=request.user
-        )
-        data = EventListSerializer(events, many=True).data
-        return Response(data)
-    else:
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+    try:
+        date = datetime.strptime(date, '%Y-%m-%d')
+        if date >= timezone.datetime.now():
+            events = Event.objects.filter(
+                start_date__year=date.year,
+                start_date__month=date.month,
+                start_date__day=date.day,
+                author=request.user
+            )
+            data = EventListSerializer(events, many=True).data
+            return Response(data)
+        else:
+            return Response({'error': 'Enter a correctly date'},
+                            status=status.HTTP_400_BAD_REQUEST)
+    except ValueError:
+        return Response({'error': 'not date format. Enter the date in format yyyy-mm'},
+                        status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])
 def event_list_per_month(request):
     """List of events for a month"""
     date = request.data['date']
-    date = datetime.strptime(date, '%Y-%m')
-    today = timezone.datetime.now()
-    if date.year >= today.year and date.month >= today.month:
-        events = Event.objects.filter(
-            start_date__year=date.year,
-            start_date__month=date.month,
-            author=request.user
-        )
-        data = EventListSerializer(events, many=True).data
-        return Response(data)
-    else:
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+    try:
+        date = datetime.strptime(date, '%Y-%m')
+        today = timezone.datetime.now()
+        if date.year >= today.year and date.month >= today.month:
+            events = Event.objects.filter(
+                start_date__year=date.year,
+                start_date__month=date.month,
+                author=request.user
+            )
+            data = EventListSerializer(events, many=True).data
+            return Response(data)
+        else:
+            return Response({'error': 'Enter a correctly date'},
+                            status=status.HTTP_400_BAD_REQUEST)
+    except ValueError:
+        return Response({'error': 'not date format. Enter the date in format yyyy-mm-dd'},
+                        status=status.HTTP_400_BAD_REQUEST)
 
 
 class EventList(APIView):
