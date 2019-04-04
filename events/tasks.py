@@ -1,6 +1,7 @@
-from reminder.celery import app
 from django.core.mail import send_mail
 from django.conf import settings
+
+from reminder.celery import app
 
 
 @app.task(name="send_email_task")

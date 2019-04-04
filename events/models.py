@@ -1,10 +1,13 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.db.models.signals import post_save
+
 from datetime import timedelta, datetime
-from .tasks import send_email
 
 from rest_framework.authtoken.models import Token
+
+from .tasks import send_email
+
 
 User = get_user_model()
 

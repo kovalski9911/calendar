@@ -4,17 +4,16 @@ from django.contrib.auth.models import (
     PermissionsMixin,
     BaseUserManager,
 )
-import uuid
 from django.db.models import signals
 from django.core.mail import send_mail
 from django.urls import reverse
 from django.conf import settings
 from django.utils import timezone
-
 from django.contrib.sites.models import Site
 
 from rest_framework.authtoken.models import Token
 
+import uuid
 import os.path
 import requests
 from icalendar import Calendar

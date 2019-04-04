@@ -1,14 +1,14 @@
+from django.shortcuts import get_object_or_404
+from django.utils import timezone
+from django.contrib.auth import get_user_model
+
+from datetime import datetime
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
 
-from django.shortcuts import get_object_or_404
-from django.utils import timezone
-
-from datetime import datetime
-
-from django.contrib.auth import get_user_model
 from .models import Event
 from .serializers import (
     EventListSerializer,
@@ -19,10 +19,10 @@ from .serializers import (
 User = get_user_model()
 
 
-@api_view(['POST'])
+@api_view(['GET'])
 def event_list_per_day(request):
     """List of events for a per day"""
-    date = request.data['date']
+    date = request.GET.get('date')
     try:
         date = datetime.strptime(date, '%Y-%m-%d')
         if date >= timezone.datetime.now():
@@ -42,10 +42,10 @@ def event_list_per_day(request):
                         status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['POST'])
+@api_view(['GET'])
 def event_list_per_month(request):
     """List of events for a month"""
-    date = request.data['date']
+    date = request.GET.get('date')
     try:
         date = datetime.strptime(date, '%Y-%m')
         today = timezone.datetime.now()

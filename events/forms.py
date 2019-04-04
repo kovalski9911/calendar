@@ -1,7 +1,8 @@
 from django import forms
-from .models import Event
 from django.utils import timezone
 from django.contrib.auth import get_user_model
+
+from .models import Event
 
 User = get_user_model()
 

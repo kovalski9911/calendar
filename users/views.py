@@ -1,8 +1,9 @@
 from django.http import Http404
 from django.shortcuts import redirect
-from .models import User
 from django.views.generic import FormView
 from django.urls import reverse_lazy
+
+from .models import User
 from .forms import UserRegisterForm
 
 
