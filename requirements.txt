@@ -3,7 +3,7 @@ billiard==3.5.0.5
 celery==4.2.1
 certifi==2019.3.9
 chardet==3.0.4
-Django==2.1.7
+Django==2.1.11
 django-crispy-forms==1.7.2
 djangorestframework==3.9.2
 icalendar==4.0.3
